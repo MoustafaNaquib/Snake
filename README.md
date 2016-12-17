@@ -1,2 +1,2 @@
-# Snake
-Snake game written in JavaScript
+# Snake2
+snake with 2 players

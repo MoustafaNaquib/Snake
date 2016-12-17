@@ -1,68 +1,147 @@
 var snake;
+var snake2;
 var gridSize = 10;
-var snakeSize = 0;
+var snakeCount = 1;
+var gameStarted = 0;
+var twoPlayers;
+var time;
+
 
 function setup() {
-  createCanvas(500, 500);
-  food = new Food();
-  snake = new Snake();
+  createCanvas(1000, 600);
   
-  speedSlider = createSlider(1, 20, 10);
-  speedSlider.position(515, 20);
   
-  addSlider = createSlider(1, 20, 5);
-  addSlider.position(515, 50);
   
 }
 
-function draw(){
-  background(255, 0, 100);
-    
-    
-    text("Speed", 460, 30);
-    text("Add Rate", 445, 60);
+function createSnakes(players)
+{
+  snake = new Snake();
+  twoPlayers = 1;
   
-    frameRate(speedSlider.value());
+  if(players === 2)
+  {
+     twoPlayers = 2;
+     snakeCount++;
+     snake2 = new Snake();
+  }
+  print("Game Started");
+  gameStarted = 1;
+ 
+}
+
+function startGame(players)
+{
+  food = new Food();
+  
+  createSnakes(players);
+  
+}
+
+function menu()
+{
+  textSize(60)
+  textFont("Helvetica");
+  
+  fill(255);
+  stroke(0);
+  strokeWeight(4);
+  textAlign(CENTER, TOP);
+  text("Snake",width/2,height/8);
+    
+  textSize(30);
+  strokeWeight(3);
+  
+   text("One Player", width/8, height/3);
+    
+    text("Two Players", width- (width/8), height/3);
+    
+
+  if(mouseX < width/2)
+  {
+    fill(mouseX/20);
+    text("One Player", width/8, height/3);
+    if(mouseIsPressed)
+    {
+      startGame(1);
+    }
+  }
+  else
+  {
+    fill(mouseX/20);
+    text("Two Players", width- (width/8), height/3); 
+    if(mouseIsPressed)
+    {
+     
+      startGame(2);
+    }
+  }
+  
+  
+  
+  
+  
+}
+
+
+
+function draw(){
+  background(249, 213, 229);
+    
+    if(gameStarted === 0)
+    {
+      menu();
+    }
+    else
+    {
+   
+    
+    
     food.display();
 
     
-    
-    snake.move();
-    snake.display();
-    snake.collided();
-    
+    snakeLogic();
    
+    }
+     frameRate(15);
+  
+    
+    
+    
+}
 
-
+function snakeLogic()
+{
+    snake.move();
+   
+    
+    
+    snake.display();
+    
+    
+    snake.collided();
+   
+   
+    
+    if(twoPlayers === 2)
+    {
+      snake2.move();
+      snake2.display();
+      snake2.collided();
+      
+    }
     
     if(snake.eaten(food))
     {
       food = new Food();
-      snakeSize+=addSlider.value();
+      snake.snakeSize+=5;
     }
-}
-
-function keyPressed()
-{
-  if(keyCode === LEFT_ARROW && snake.xVelocity === 0){
-    snake.xVelocity = -gridSize;
-    snake.yVelocity = 0;
-    snake.move;
-  
-  }
-  else if(keyCode === RIGHT_ARROW && snake.xVelocity === 0){
-    snake.xVelocity = gridSize;
-    snake.yVelocity = 0;
-    snake.move;
-  }
-  else if(keyCode === UP_ARROW && snake.yVelocity === 0){
-    snake.yVelocity = -gridSize;
-    snake.xVelocity = 0;
-    snake.move;
-  }
-  else if(keyCode === DOWN_ARROW && snake.yVelocity === 0){
-    snake.yVelocity = gridSize;
-    snake.xVelocity = 0;
-    snake.move;
-  }
+    if(twoPlayers === 2)
+    {
+     if(snake2.eaten(food))
+    {
+      food = new Food();
+      snake2.snakeSize+=5;
+    }
+    }
 }
